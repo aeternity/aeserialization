@@ -19,7 +19,10 @@
                     | block_tx_hash
                     | block_state_hash
                     | channel
+                    | contract_bytearray
                     | contract_pubkey
+                    | contract_store_key
+                    | contract_store_value
                     | transaction
                     | tx_hash
                     | oracle_pubkey
@@ -33,7 +36,8 @@
                     | peer_pubkey
                     | state
                     | poi
-                    | state_trees.
+                    | state_trees
+                    | call_state_tree.
 
 -type extended_type() :: known_type() | block_hash | {id_hash, [known_type()]}.
 
@@ -169,52 +173,58 @@ type2id(contract_pubkey) -> contract;
 type2id(name)            -> name;
 type2id(oracle_pubkey)   -> oracle.
 
-type2enc(key_block_hash)   -> ?BASE58;
-type2enc(micro_block_hash) -> ?BASE58;
-type2enc(block_pof_hash)   -> ?BASE58;
-type2enc(block_tx_hash)    -> ?BASE58;
-type2enc(block_state_hash) -> ?BASE58;
-type2enc(channel)          -> ?BASE58;
-type2enc(contract_pubkey)  -> ?BASE58;
-type2enc(contract_bytearray)-> ?BASE64;
-type2enc(transaction)      -> ?BASE64;
-type2enc(tx_hash)          -> ?BASE58;
-type2enc(oracle_pubkey)    -> ?BASE58;
-type2enc(oracle_query)     -> ?BASE64;
-type2enc(oracle_query_id)  -> ?BASE58;
-type2enc(oracle_response)  -> ?BASE64;
-type2enc(account_pubkey)   -> ?BASE58;
-type2enc(signature)        -> ?BASE58;
-type2enc(commitment)       -> ?BASE58;
-type2enc(peer_pubkey)      -> ?BASE58;
-type2enc(name)             -> ?BASE58;
-type2enc(state)            -> ?BASE64;
-type2enc(poi)              -> ?BASE64;
-type2enc(state_trees)      -> ?BASE64.
+type2enc(key_block_hash)       -> ?BASE58;
+type2enc(micro_block_hash)     -> ?BASE58;
+type2enc(block_pof_hash)       -> ?BASE58;
+type2enc(block_tx_hash)        -> ?BASE58;
+type2enc(block_state_hash)     -> ?BASE58;
+type2enc(channel)              -> ?BASE58;
+type2enc(contract_pubkey)      -> ?BASE58;
+type2enc(contract_bytearray)   -> ?BASE64;
+type2enc(contract_store_key)   -> ?BASE64;
+type2enc(contract_store_value) -> ?BASE64;
+type2enc(transaction)          -> ?BASE64;
+type2enc(tx_hash)              -> ?BASE58;
+type2enc(oracle_pubkey)        -> ?BASE58;
+type2enc(oracle_query)         -> ?BASE64;
+type2enc(oracle_query_id)      -> ?BASE58;
+type2enc(oracle_response)      -> ?BASE64;
+type2enc(account_pubkey)       -> ?BASE58;
+type2enc(signature)            -> ?BASE58;
+type2enc(commitment)           -> ?BASE58;
+type2enc(peer_pubkey)          -> ?BASE58;
+type2enc(name)                 -> ?BASE58;
+type2enc(state)                -> ?BASE64;
+type2enc(poi)                  -> ?BASE64;
+type2enc(state_trees)          -> ?BASE64;
+type2enc(call_state_tree)      -> ?BASE64.
 
 
-type2pfx(key_block_hash)   -> <<"kh">>;
-type2pfx(micro_block_hash) -> <<"mh">>;
-type2pfx(block_pof_hash)   -> <<"bf">>;
-type2pfx(block_tx_hash)    -> <<"bx">>;
-type2pfx(block_state_hash) -> <<"bs">>;
-type2pfx(channel)          -> <<"ch">>;
-type2pfx(contract_pubkey)  -> <<"ct">>;
-type2pfx(contract_bytearray)-> <<"cb">>;
-type2pfx(transaction)      -> <<"tx">>;
-type2pfx(tx_hash)          -> <<"th">>;
-type2pfx(oracle_pubkey)    -> <<"ok">>;
-type2pfx(oracle_query)     -> <<"ov">>;
-type2pfx(oracle_query_id)  -> <<"oq">>;
-type2pfx(oracle_response)  -> <<"or">>;
-type2pfx(account_pubkey)   -> <<"ak">>;
-type2pfx(signature)        -> <<"sg">>;
-type2pfx(commitment)       -> <<"cm">>;
-type2pfx(peer_pubkey)      -> <<"pp">>;
-type2pfx(name)             -> <<"nm">>;
-type2pfx(state)            -> <<"st">>;
-type2pfx(poi)              -> <<"pi">>;
-type2pfx(state_trees)      -> <<"ss">>.
+type2pfx(key_block_hash)       -> <<"kh">>;
+type2pfx(micro_block_hash)     -> <<"mh">>;
+type2pfx(block_pof_hash)       -> <<"bf">>;
+type2pfx(block_tx_hash)        -> <<"bx">>;
+type2pfx(block_state_hash)     -> <<"bs">>;
+type2pfx(channel)              -> <<"ch">>;
+type2pfx(contract_pubkey)      -> <<"ct">>;
+type2pfx(contract_bytearray)   -> <<"cb">>;
+type2pfx(contract_store_key)   -> <<"ck">>;
+type2pfx(contract_store_value) -> <<"cv">>;
+type2pfx(transaction)          -> <<"tx">>;
+type2pfx(tx_hash)              -> <<"th">>;
+type2pfx(oracle_pubkey)        -> <<"ok">>;
+type2pfx(oracle_query)         -> <<"ov">>;
+type2pfx(oracle_query_id)      -> <<"oq">>;
+type2pfx(oracle_response)      -> <<"or">>;
+type2pfx(account_pubkey)       -> <<"ak">>;
+type2pfx(signature)            -> <<"sg">>;
+type2pfx(commitment)           -> <<"cm">>;
+type2pfx(peer_pubkey)          -> <<"pp">>;
+type2pfx(name)                 -> <<"nm">>;
+type2pfx(state)                -> <<"st">>;
+type2pfx(poi)                  -> <<"pi">>;
+type2pfx(state_trees)          -> <<"ss">>;
+type2pfx(call_state_tree)      -> <<"cs">>.
 
 pfx2type(<<"kh">>) -> key_block_hash;
 pfx2type(<<"mh">>) -> micro_block_hash;
@@ -223,6 +233,8 @@ pfx2type(<<"bx">>) -> block_tx_hash;
 pfx2type(<<"bs">>) -> block_state_hash;
 pfx2type(<<"ch">>) -> channel;
 pfx2type(<<"cb">>) -> contract_bytearray;
+pfx2type(<<"ck">>) -> contract_store_key;
+pfx2type(<<"cv">>) -> contract_store_value;
 pfx2type(<<"ct">>) -> contract_pubkey;
 pfx2type(<<"tx">>) -> transaction;
 pfx2type(<<"th">>) -> tx_hash;
@@ -237,32 +249,36 @@ pfx2type(<<"pp">>) -> peer_pubkey;
 pfx2type(<<"nm">>) -> name;
 pfx2type(<<"st">>) -> state;
 pfx2type(<<"pi">>) -> poi;
-pfx2type(<<"ss">>) -> state_trees.
+pfx2type(<<"ss">>) -> state_trees;
+pfx2type(<<"cs">>) -> call_state_tree.
 
 -spec byte_size_for_type(known_type()) -> non_neg_integer() | not_applicable.
 
-byte_size_for_type(key_block_hash)   -> 32;
-byte_size_for_type(micro_block_hash) -> 32;
-byte_size_for_type(block_pof_hash)   -> 32;
-byte_size_for_type(block_tx_hash)    -> 32;
-byte_size_for_type(block_state_hash) -> 32;
-byte_size_for_type(channel)          -> 32;
-byte_size_for_type(contract_pubkey)  -> 32;
-byte_size_for_type(contract_bytearray)-> not_applicable;
-byte_size_for_type(transaction)      -> not_applicable;
-byte_size_for_type(tx_hash)          -> 32;
-byte_size_for_type(oracle_pubkey)    -> 32;
-byte_size_for_type(oracle_query)     -> not_applicable;
-byte_size_for_type(oracle_query_id)  -> 32;
-byte_size_for_type(oracle_response)  -> not_applicable;
-byte_size_for_type(account_pubkey)   -> 32;
-byte_size_for_type(signature)        -> 64;
-byte_size_for_type(name)             -> not_applicable;
-byte_size_for_type(commitment)       -> 32;
-byte_size_for_type(peer_pubkey)      -> 32;
-byte_size_for_type(state)            -> 32;
-byte_size_for_type(poi)              -> not_applicable;
-byte_size_for_type(state_trees)      -> not_applicable.
+byte_size_for_type(key_block_hash)       -> 32;
+byte_size_for_type(micro_block_hash)     -> 32;
+byte_size_for_type(block_pof_hash)       -> 32;
+byte_size_for_type(block_tx_hash)        -> 32;
+byte_size_for_type(block_state_hash)     -> 32;
+byte_size_for_type(channel)              -> 32;
+byte_size_for_type(contract_pubkey)      -> 32;
+byte_size_for_type(contract_bytearray)   -> not_applicable;
+byte_size_for_type(contract_store_key)   -> not_applicable;
+byte_size_for_type(contract_store_value) -> not_applicable;
+byte_size_for_type(transaction)          -> not_applicable;
+byte_size_for_type(tx_hash)              -> 32;
+byte_size_for_type(oracle_pubkey)        -> 32;
+byte_size_for_type(oracle_query)         -> not_applicable;
+byte_size_for_type(oracle_query_id)      -> 32;
+byte_size_for_type(oracle_response)      -> not_applicable;
+byte_size_for_type(account_pubkey)       -> 32;
+byte_size_for_type(signature)            -> 64;
+byte_size_for_type(name)                 -> not_applicable;
+byte_size_for_type(commitment)           -> 32;
+byte_size_for_type(peer_pubkey)          -> 32;
+byte_size_for_type(state)                -> 32;
+byte_size_for_type(poi)                  -> not_applicable;
+byte_size_for_type(state_trees)          -> not_applicable;
+byte_size_for_type(call_state_tree)      -> not_applicable.
 
 
 %% TODO: Fix the base58 module so that it consistently uses binaries instead
