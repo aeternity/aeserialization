@@ -32,6 +32,7 @@
                     | account_pubkey
                     | signature
                     | name
+                    | subname
                     | commitment
                     | peer_pubkey
                     | state
@@ -195,6 +196,7 @@ type2enc(signature)            -> ?BASE58;
 type2enc(commitment)           -> ?BASE58;
 type2enc(peer_pubkey)          -> ?BASE58;
 type2enc(name)                 -> ?BASE58;
+type2enc(subname)              -> ?BASE58;
 type2enc(state)                -> ?BASE64;
 type2enc(poi)                  -> ?BASE64;
 type2enc(state_trees)          -> ?BASE64;
@@ -223,6 +225,7 @@ type2pfx(signature)            -> <<"sg">>;
 type2pfx(commitment)           -> <<"cm">>;
 type2pfx(peer_pubkey)          -> <<"pp">>;
 type2pfx(name)                 -> <<"nm">>;
+type2pfx(subname)              -> <<"sn">>;
 type2pfx(state)                -> <<"st">>;
 type2pfx(poi)                  -> <<"pi">>;
 type2pfx(state_trees)          -> <<"ss">>;
@@ -250,6 +253,7 @@ pfx2type(<<"sg">>) -> signature;
 pfx2type(<<"cm">>) -> commitment;
 pfx2type(<<"pp">>) -> peer_pubkey;
 pfx2type(<<"nm">>) -> name;
+pfx2type(<<"sn">>) -> subname;
 pfx2type(<<"st">>) -> state;
 pfx2type(<<"pi">>) -> poi;
 pfx2type(<<"ss">>) -> state_trees;
@@ -277,6 +281,7 @@ byte_size_for_type(oracle_response)      -> not_applicable;
 byte_size_for_type(account_pubkey)       -> 32;
 byte_size_for_type(signature)            -> 64;
 byte_size_for_type(name)                 -> not_applicable;
+byte_size_for_type(subname)              -> not_applicable;
 byte_size_for_type(commitment)           -> 32;
 byte_size_for_type(peer_pubkey)          -> 32;
 byte_size_for_type(state)                -> 32;

@@ -24,7 +24,7 @@
             , val
             }).
 
--type tag() :: 'account' | 'oracle' | 'name'
+-type tag() :: 'account' | 'oracle' | 'name' | 'subname'
              | 'commitment' | 'contract' | 'channel'.
 -type val() :: <<_:256>>.
 -opaque(id() :: #id{}).
@@ -41,6 +41,7 @@
 -define(IS_TAG(___TAG___), ___TAG___ =:= account;
                            ___TAG___ =:= oracle;
                            ___TAG___ =:= name;
+                           ___TAG___ =:= subname;
                            ___TAG___ =:= commitment;
                            ___TAG___ =:= contract;
                            ___TAG___ =:= channel
