@@ -196,7 +196,7 @@ type2enc(signature)            -> ?BASE58;
 type2enc(commitment)           -> ?BASE58;
 type2enc(peer_pubkey)          -> ?BASE58;
 type2enc(name)                 -> ?BASE58;
-type2enc(subname)              -> ?BASE58;
+type2enc(subname)              -> ?BASE64;
 type2enc(state)                -> ?BASE64;
 type2enc(poi)                  -> ?BASE64;
 type2enc(state_trees)          -> ?BASE64;
