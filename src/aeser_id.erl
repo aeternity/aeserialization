@@ -24,7 +24,7 @@
             , val
             }).
 
--type tag() :: 'account' | 'oracle' | 'name'
+-type tag() :: 'account' | 'oracle' | 'name' | 'subname'
              | 'commitment' | 'contract' | 'channel'.
 -type val() :: <<_:256>>.
 -opaque(id() :: #id{}).
@@ -37,10 +37,12 @@
 -define(PUB_SIZE, 32).
 -define(TAG_SIZE, 1).
 -define(SERIALIZED_SIZE, 33). %% ?TAG_SIZE + ?PUB_SIZE
+-define(SUBNAME_SERIALIZED_SIZE, 65). %% ?TAG_SIZE + ?PUB_SIZE + ?PUB_SIZE
 
 -define(IS_TAG(___TAG___), ___TAG___ =:= account;
                            ___TAG___ =:= oracle;
                            ___TAG___ =:= name;
+                           ___TAG___ =:= subname;
                            ___TAG___ =:= commitment;
                            ___TAG___ =:= contract;
                            ___TAG___ =:= channel
@@ -82,17 +84,25 @@ is_id(_) -> false.
 -spec encode(id()) -> binary().
 encode(#id{tag = Tag, val = Val}) ->
     Res = <<(encode_tag(Tag)):?TAG_SIZE/unit:8, Val/binary>>,
-    true = ?SERIALIZED_SIZE =:= byte_size(Res),
+    true = serialized_size(Tag) =:= byte_size(Res),
     Res.
 
 -spec decode(binary()) -> id().
 decode(<<Tag:?TAG_SIZE/unit:8, Val:?PUB_SIZE/binary>>) ->
     #id{ tag = decode_tag(Tag)
+       , val = Val};
+decode(<<SubnameTag:?TAG_SIZE/unit:8, Val:(?PUB_SIZE+?PUB_SIZE)/binary>>) ->
+    #id{ tag = subname = decode_tag(SubnameTag)
        , val = Val}.
+
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+serialized_size(subname) -> ?SUBNAME_SERIALIZED_SIZE;
+serialized_size(_)       -> ?SERIALIZED_SIZE.
+
 
 encode_tag(account)    -> 1;
 encode_tag(name)       -> 2;
@@ -100,6 +110,7 @@ encode_tag(commitment) -> 3;
 encode_tag(oracle)     -> 4;
 encode_tag(contract)   -> 5;
 encode_tag(channel)    -> 6;
+encode_tag(subname)    -> 7;
 encode_tag(Other)      -> error({illegal_id_tag_name, Other}).
 
 decode_tag(1) -> account;
@@ -108,4 +119,5 @@ decode_tag(3) -> commitment;
 decode_tag(4) -> oracle;
 decode_tag(5) -> contract;
 decode_tag(6) -> channel;
+decode_tag(7) -> subname;
 decode_tag(X) -> error({illegal_id_tag, X}).
