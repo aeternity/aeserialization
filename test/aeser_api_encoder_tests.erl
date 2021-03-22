@@ -23,6 +23,7 @@
                , {commitment        , 32}
                , {peer_pubkey       , 32}
                , {state             , 32}
+               , {fate_code         , not_applicable}
                , {poi               , not_applicable}]).
 
 encode_decode_test_() ->
