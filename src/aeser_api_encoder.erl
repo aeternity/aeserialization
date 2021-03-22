@@ -227,7 +227,8 @@ type2pfx(state)                -> <<"st">>;
 type2pfx(poi)                  -> <<"pi">>;
 type2pfx(state_trees)          -> <<"ss">>;
 type2pfx(call_state_tree)      -> <<"cs">>;
-type2pfx(bytearray)            -> <<"ba">>.
+type2pfx(bytearray)            -> <<"ba">>;
+type2pfx(fate_code)            -> <<"fc">>.
 
 pfx2type(<<"kh">>) -> key_block_hash;
 pfx2type(<<"mh">>) -> micro_block_hash;
@@ -254,7 +255,8 @@ pfx2type(<<"st">>) -> state;
 pfx2type(<<"pi">>) -> poi;
 pfx2type(<<"ss">>) -> state_trees;
 pfx2type(<<"cs">>) -> call_state_tree;
-pfx2type(<<"ba">>) -> bytearray.
+pfx2type(<<"ba">>) -> bytearray;
+pfx2type(<<"fc">>) -> fate_code.
 
 -spec byte_size_for_type(known_type()) -> non_neg_integer() | not_applicable.
 
