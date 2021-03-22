@@ -38,7 +38,8 @@
                     | poi
                     | state_trees
                     | call_state_tree
-                    | bytearray.
+                    | bytearray
+                    | fate_code.
 
 -type extended_type() :: known_type() | block_hash | {id_hash, [known_type()]}.
 
@@ -199,7 +200,8 @@ type2enc(state)                -> ?BASE64;
 type2enc(poi)                  -> ?BASE64;
 type2enc(state_trees)          -> ?BASE64;
 type2enc(call_state_tree)      -> ?BASE64;
-type2enc(bytearray)            -> ?BASE64.
+type2enc(bytearray)            -> ?BASE64;
+type2enc(fate_code)            -> ?BASE64.
 
 
 type2pfx(key_block_hash)       -> <<"kh">>;
@@ -285,7 +287,8 @@ byte_size_for_type(state)                -> 32;
 byte_size_for_type(poi)                  -> not_applicable;
 byte_size_for_type(state_trees)          -> not_applicable;
 byte_size_for_type(call_state_tree)      -> not_applicable;
-byte_size_for_type(bytearray)            -> not_applicable.
+byte_size_for_type(bytearray)            -> not_applicable;
+byte_size_for_type(fate_code)            -> not_applicable.
 
 
 %% TODO: Fix the base58 module so that it consistently uses binaries instead
