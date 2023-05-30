@@ -1,0 +1,17 @@
+{a_email,[]}.
+{author,"Hans Svensson"}.
+{c_email,[]}.
+{copyright,"Hans Svensson"}.
+{deps,[{"otpr","eblake2",{1,0,0}}]}.
+{desc,"Serialization helpers for Aeternity node."}.
+{file_exts,[]}.
+{key_name,none}.
+{license,skip}.
+{modules,[]}.
+{name,"AE Serialization"}.
+{package_id,{"otpr","aeserialization",{0,1,0}}}.
+{prefix,none}.
+{repo_url,"https://github.com/aeternity/aeserialization"}.
+{tags,["blockchain","crypto","ae"]}.
+{type,lib}.
+{ws_url,[]}.

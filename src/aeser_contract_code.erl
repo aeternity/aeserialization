@@ -16,15 +16,16 @@
 serialize(CodeMap) ->
     serialize(CodeMap, ?SOPHIA_CONTRACT_VSN_3).
 
+
 -spec serialize(map(), non_neg_integer()) -> binary().
 serialize(CodeMap = #{ byte_code := ByteCode
                      , type_info := TypeInfo }, SophiaContractVersion) ->
     %% Source hash
-    SourceHash = case CodeMap of
-                     #{ source_hash := SHash } -> SHash;
-                     #{ contract_source := SrcStr } ->
-                         enacl:generichash(32, list_to_binary(SrcStr))
-                 end,
+    SourceHash =
+        case CodeMap of
+            #{ source_hash := SHash }      -> SHash;
+            #{ contract_source := SrcStr } -> blake2(32, list_to_binary(SrcStr))
+        end,
 
     %% Compiler version
     Version    = maps:get(compiler_version, CodeMap, <<"unknown">>),
@@ -46,6 +47,21 @@ serialize(CodeMap = #{ byte_code := ByteCode
                                   SophiaContractVersion,
                                   serialization_template(SophiaContractVersion),
                                   Fields).
+
+% NOTE:
+%   This form significantly favors the presence of enacl and slows fallback
+%   invokation of eblake2. `try' is really fast; the error throwing machinery
+%   is comparatively slow. The assumption here is that in cases where you want
+%   eblake2 performance isn't the problem you're solving (you're probably not
+%   syncing a new node, for example).
+blake2(Size, Bin) ->
+    try
+        enacl:generichash(Size, Bin)
+    catch error:undef ->
+        {ok, Hash} = eblake2:blake2b(Size, Bin),
+        Hash
+    end.
+
 
 -spec deserialize(binary()) -> map().
 deserialize(Binary) ->
