@@ -30,6 +30,7 @@
                     | oracle_query_id
                     | oracle_response
                     | account_pubkey
+                    | account_seckey
                     | signature
                     | name
                     | commitment
@@ -191,6 +192,7 @@ type2enc(oracle_query)         -> ?BASE64;
 type2enc(oracle_query_id)      -> ?BASE58;
 type2enc(oracle_response)      -> ?BASE64;
 type2enc(account_pubkey)       -> ?BASE58;
+type2enc(account_seckey)       -> ?BASE58;
 type2enc(signature)            -> ?BASE58;
 type2enc(commitment)           -> ?BASE58;
 type2enc(peer_pubkey)          -> ?BASE58;
@@ -219,6 +221,7 @@ type2pfx(oracle_query)         -> <<"ov">>;
 type2pfx(oracle_query_id)      -> <<"oq">>;
 type2pfx(oracle_response)      -> <<"or">>;
 type2pfx(account_pubkey)       -> <<"ak">>;
+type2pfx(account_seckey)       -> <<"sk">>;
 type2pfx(signature)            -> <<"sg">>;
 type2pfx(commitment)           -> <<"cm">>;
 type2pfx(peer_pubkey)          -> <<"pp">>;
@@ -246,6 +249,7 @@ pfx2type(<<"ov">>) -> oracle_query;
 pfx2type(<<"oq">>) -> oracle_query_id;
 pfx2type(<<"or">>) -> oracle_response;
 pfx2type(<<"ak">>) -> account_pubkey;
+pfx2type(<<"sk">>) -> account_seckey;
 pfx2type(<<"sg">>) -> signature;
 pfx2type(<<"cm">>) -> commitment;
 pfx2type(<<"pp">>) -> peer_pubkey;
@@ -275,6 +279,7 @@ byte_size_for_type(oracle_query)         -> not_applicable;
 byte_size_for_type(oracle_query_id)      -> 32;
 byte_size_for_type(oracle_response)      -> not_applicable;
 byte_size_for_type(account_pubkey)       -> 32;
+byte_size_for_type(account_seckey)       -> 32;
 byte_size_for_type(signature)            -> 64;
 byte_size_for_type(name)                 -> not_applicable;
 byte_size_for_type(commitment)           -> 32;
