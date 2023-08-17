@@ -129,6 +129,7 @@ decode_field(#{items := Items}, List) when length(List) =:= length(Items) ->
     Zipped = lists:zip(Items, List),
     lists:foldl(
       fun({{K, Type}, V}, Map) ->
+              maps:is_key(K, Map) andalso error(badarg, duplicate_field),
               Map#{ K => decode_field(Type, V) }
       end, #{}, Zipped);
 decode_field(Type, List) when length(List) =:= tuple_size(Type) ->
