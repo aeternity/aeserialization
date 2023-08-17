@@ -28,7 +28,7 @@
               | 'binary'
               | 'id'     %% As defined in aec_id.erl
               | [type()] %% Length one in the type. This means a list of any length.
-              | #{items := [{field_name(), type()}]}
+              | #{items := [{field_name(), type()}]} %% Record with named fields represented as a map. Encoded as a list in the given order.
               | tuple(). %% Any arity, containing type(). This means a static size array.
 
 -type encodable_term() :: non_neg_integer()
