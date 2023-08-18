@@ -28,12 +28,14 @@
               | 'binary'
               | 'id'     %% As defined in aec_id.erl
               | [type()] %% Length one in the type. This means a list of any length.
+              | #{items := [{field_name(), type()}]} %% Record with named fields represented as a map. Encoded as a list in the given order.
               | tuple(). %% Any arity, containing type(). This means a static size array.
 
 -type encodable_term() :: non_neg_integer()
                         | binary()
                         | boolean()
                         | [encodable_term()] %% Of any length
+			| #{atom() => encodable_term()}
                         | tuple()  %% Any arity, containing encodable_term().
                         | aeser_id:id().
 
@@ -101,6 +103,12 @@ decode_fields(Template, Values) ->
 
 encode_field([Type], L) when is_list(L) ->
     [encode_field(Type, X) || X <- L];
+encode_field(#{items := Items}, Map) ->
+    lists:map(
+      fun({K, Type}) ->
+              V = maps:get(K, Map),
+              encode_field(Type, V)
+      end, Items);
 encode_field(Type, T) when tuple_size(Type) =:= tuple_size(T) ->
     Zipped = lists:zip(tuple_to_list(Type), tuple_to_list(T)),
     [encode_field(X, Y) || {X, Y} <- Zipped];
@@ -117,6 +125,13 @@ encode_field(Type, Val) -> error({illegal, Type, Val}).
 
 decode_field([Type], List) when is_list(List) ->
     [decode_field(Type, X) || X <- List];
+decode_field(#{items := Items}, List) when length(List) =:= length(Items) ->
+    Zipped = lists:zip(Items, List),
+    lists:foldl(
+      fun({{K, Type}, V}, Map) ->
+              maps:is_key(K, Map) andalso error(badarg, duplicate_field),
+              Map#{ K => decode_field(Type, V) }
+      end, #{}, Zipped);
 decode_field(Type, List) when length(List) =:= tuple_size(Type) ->
     Zipped = lists:zip(tuple_to_list(Type), List),
     list_to_tuple([decode_field(X, Y) || {X, Y} <- Zipped]);
