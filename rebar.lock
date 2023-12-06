@@ -1,0 +1,8 @@
+[{<<"base58">>,
+  {git,"https://github.com/aeternity/erl-base58.git",
+       {ref,"60a335668a60328a29f9731b67c4a0e9e3d50ab6"}},
+  0},
+ {<<"enacl">>,
+  {git,"https://github.com/aeternity/enacl.git",
+       {ref,"67fceef42c0d055570f2e67b571f8d1f8de2f204"}},
+  0}].
