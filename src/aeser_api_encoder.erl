@@ -13,8 +13,7 @@
          encode_parent_pin_payload/1,
          decode_parent_pin_payload/1,
          encode_child_pin_payload/1,
-         decode_child_pin_payload/1,
-         is_pin/1]).
+         decode_child_pin_payload/1]).
 
 -export_type([encoded/0]).
 
@@ -340,9 +339,3 @@ decode_child_pin_payload(<<"pin", TxHash/binary>>) ->
     {ok, TxHash};
 decode_child_pin_payload(BadTxHash) ->
     {error, {bad_child_pin_payload, BadTxHash}}.
-
-is_pin(Pin) ->
-    case decode_child_pin_payload(Pin) of
-        {error,_} -> false;
-        _ -> true
-    end.
