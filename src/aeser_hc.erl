@@ -45,7 +45,7 @@ decode_parent_pin_payload(Binary) ->
         {ok, BlockHash} = aeser_api_encoder:safe_decode(key_block_hash, EncBlockHash),
         {ok, #{epoch => Epoch, height => Height, block_hash => BlockHash}}
     catch
-        _ -> {error, {bad_parent_pin_payload, Binary}}
+        _:_ -> {error, {bad_parent_pin_payload, Binary}}
     end.
 
 %%=============================================================================
