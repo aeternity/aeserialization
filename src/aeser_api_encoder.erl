@@ -9,11 +9,7 @@
 -export([encode/2,
          decode/1,
          safe_decode/2,
-         byte_size_for_type/1,
-         encode_parent_pin_payload/1,
-         decode_parent_pin_payload/1,
-         encode_child_pin_payload/1,
-         decode_child_pin_payload/1]).
+         byte_size_for_type/1]).
 
 -export_type([encoded/0]).
 
@@ -308,34 +304,3 @@ binary_to_base64(Bin) ->
 
 base64_to_binary(Bin) when is_binary(Bin) ->
     base64:decode(Bin).
-
-%%%=============================================================================
-%%% Pinning
-%%%=============================================================================
-
--spec encode_parent_pin_payload(#{epoch => integer(), height => integer(), block_hash => binary()}) -> binary().
-encode_parent_pin_payload(#{epoch := Epoch, height := Height, block_hash := BlockHash}) ->
-    EpochHex = list_to_binary(erlang:integer_to_list(Epoch, 16)),
-    HeightHex = list_to_binary(erlang:integer_to_list(Height, 16)),
-    EncBlockHash = aeser_api_encoder:encode(key_block_hash, BlockHash),
-    <<EpochHex/binary, ":", HeightHex/binary, " ", EncBlockHash/binary>>.
-
-%-spec decode_parent_pin_payload(binary()) -> #{epoch => integer(), height => integer(), block_hash => binary()}.
-decode_parent_pin_payload(Binary) ->
-    try
-        [HexEpoch, HexHeight, EncBlockHash] = binary:split(Binary, [<<":">>, <<" ">>], [global]),
-        Epoch = erlang:list_to_integer(binary_to_list(HexEpoch), 16),
-        Height = erlang:list_to_integer(binary_to_list(HexHeight), 16),
-        {ok, BlockHash} = aeser_api_encoder:safe_decode(key_block_hash, EncBlockHash),
-        {ok, #{epoch => Epoch, height => Height, block_hash => BlockHash}}
-    catch
-        _ -> {error, {bad_parent_pin_payload, Binary}}
-    end.
-
-encode_child_pin_payload(TxHash) ->
-    <<"pin", TxHash/binary>>.
-
-decode_child_pin_payload(<<"pin", TxHash/binary>>) ->
-    {ok, TxHash};
-decode_child_pin_payload(BadTxHash) ->
-    {error, {bad_child_pin_payload, BadTxHash}}.
