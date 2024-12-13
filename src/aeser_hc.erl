@@ -35,7 +35,8 @@ encode_parent_pin_payload(#{epoch := Epoch, height := Height, block_hash := Bloc
 %% Decode a bionary payload to an Epoch info map when fetching pinning info
 %% from the parent chain
 %% =============================================================================
--spec decode_parent_pin_payload(binary()) -> #{epoch => integer(), height => integer(), block_hash => binary()}.
+-spec decode_parent_pin_payload(binary()) ->
+    {ok, #{epoch => integer(), height => integer(), block_hash => term()}} | {error, term()}.
 decode_parent_pin_payload(Binary) ->
     try
         [HexEpoch, HexHeight, EncBlockHash] = binary:split(Binary, [<<":">>, <<" ">>], [global]),
