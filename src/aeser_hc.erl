@@ -1,7 +1,7 @@
 %%%-----------------------------------------------------------------------------
 %%% @copyright (C) 2024, Aeternity Anstalt
 %%% @doc
-%%% Module for various Hypoerchain-related encoding tasks
+%%% Module for various Hyperchain-related encoding tasks
 %%% @end
 %%%-----------------------------------------------------------------------------
 
@@ -53,12 +53,14 @@ decode_parent_pin_payload(Binary) ->
 %% easily findable when notarized (in a spend tx to the leader of the last
 %% epoch block) to the hyper chain.
 %%=============================================================================
+-spec encode_child_pin_payload(binary()) -> binary().
 encode_child_pin_payload(TxHash) ->
     <<"pin", TxHash/binary>>.
 
 %%=============================================================================
 %% Decode a pinning transacation notarization payload
 %% =============================================================================
+-spec decode_child_pin_payload(binary()) -> {ok, binary()} | {error, term()}.
 decode_child_pin_payload(<<"pin", TxHash/binary>>) ->
     {ok, TxHash};
 decode_child_pin_payload(BadTxHash) ->
